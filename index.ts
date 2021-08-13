@@ -52,6 +52,9 @@ const main = () => {
 
     const oldPath = `${path}/${file.name}`;
     const newFileName = createFileName(baseName, counter++, integerSpace) 
+
+    // assumes file with extension
+    // should handle extensionless files
     const fileExtension = file.name.split(".")[1];
     const newPath = `${path}/${newFileName}.${fileExtension}`;
 
@@ -76,11 +79,10 @@ const main = () => {
 }
 main();
 
-// TODO
 /* 
 TODO
 
-* handle files without
+* handle files without extensions
 
 
 
