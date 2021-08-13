@@ -2,9 +2,8 @@ import * as fs from 'fs';
 import commandLineArgs from 'command-line-args'
 
 
-const createFileName = (fileName: string, counter: number, maxNum: number) => {
-  const maxLength = maxNum.toString().length;
-  return fileName + String(counter).padStart(maxLength, "0");
+const createFileName = (fileName: string, counter: number, integerSpace: number) => {
+  return fileName + String(counter).padStart(integerSpace, "0");
 }
 
 const main = () => {
@@ -12,6 +11,7 @@ const main = () => {
   const OptionDefinitions: commandLineArgs.OptionDefinition[] = [
     { name: 'quiet', alias: 'q', type: Boolean, defaultValue: false},
     { name: 'dryrun', alias: 'd', type: Boolean, defaultValue: true},
+    { name: 'integerSpace', alias: '', type: Number, multiple: false, defaultValue: 4 },
     { name: 'src', alias: 'i', type: String, multiple: false, },
     { name: 'name', alias: 'n', type: String, multiple: false, defaultValue: ""},
     { name: 'startNum', type: Number, multiple: false, defaultOption: true, defaultValue: "1"},
@@ -28,6 +28,15 @@ const main = () => {
   let counter: number = startNum;
   const baseName: string = options["name"];
 
+  // integerSpace
+  // larger of: CLI arg or maxNumber.length
+  // used for file counter padding, 0999 vs 999 for example
+  const maxNumberOfFiles = (startNum + files.length).toString().length;
+  let integerSpace: number = parseInt(options["integerSpace"]);
+  integerSpace = 
+    integerSpace > maxNumberOfFiles.toString().length ? 
+    integerSpace : maxNumberOfFiles.toString().length;
+
   // gate code for aborting if extensionless files are encountered
   if (files.filter( file => file.name.includes(".")).length == 0) {
     console.error("directory contains extensionless files but support for this is not implemented");
@@ -42,25 +51,7 @@ const main = () => {
     if ( !file.isFile() ) return;
 
     const oldPath = `${path}/${file.name}`;
-
-    // kind of hacky to figure out the max offset of leading zeros
-    // ie, what if the first run has 999 files, then more are added in a second run?
-    // consider adding a CLI arg for offset
-    /*
-    0001
-    0002
-    ...
-    999
-    1000
-
-    should be:
-    0001
-    0002
-    ...
-    0999
-    1000
-    */ 
-    const newFileName = createFileName(baseName, counter++, startNum + files.length) 
+    const newFileName = createFileName(baseName, counter++, integerSpace) 
     const fileExtension = file.name.split(".")[1];
     const newPath = `${path}/${newFileName}.${fileExtension}`;
 
