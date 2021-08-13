@@ -24,6 +24,12 @@ const main = () => {
     withFileTypes: true
   });
 
+  // gate code for aborting if extensionless files are encountered
+  if (files.filter( file => file.name.includes(".")).length == 0) {
+    console.error("directory contains extensionless files but support for this is not implemented");
+    process.exit(1);
+  }
+
   let startNum = parseInt(options["startNum"])
   let counter: number = startNum;
   const baseName: string = options["name"];
@@ -36,12 +42,6 @@ const main = () => {
   integerSpace = 
     integerSpace > maxNumberOfFiles.toString().length ? 
     integerSpace : maxNumberOfFiles.toString().length;
-
-  // gate code for aborting if extensionless files are encountered
-  if (files.filter( file => file.name.includes(".")).length == 0) {
-    console.error("directory contains extensionless files but support for this is not implemented");
-    process.exit(1);
-  }
 
   files
   .filter( entry => 
