@@ -53,7 +53,7 @@ const main = () => {
     const oldPath = `${path}/${file.name}`;
     const newFileName = createFileName(baseName, counter++, integerSpace) 
 
-    // assumes file with extension
+    // assumes file with extension and one dot
     // should handle extensionless files
     const fileExtension = file.name.split(".")[1];
     const newPath = `${path}/${newFileName}.${fileExtension}`;
