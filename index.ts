@@ -10,8 +10,8 @@ const main = () => {
 
   const OptionDefinitions: commandLineArgs.OptionDefinition[] = [
     { name: 'quiet', alias: 'q', type: Boolean, defaultValue: false},
-    { name: 'dryrun', alias: 'd', type: Boolean, defaultValue: true},
-    { name: 'integerSpace', alias: '', type: Number, multiple: false, defaultValue: 4 },
+    { name: 'wetrun', alias: 'w', type: Boolean, defaultValue: false},
+    { name: 'integerSpace', alias: 's', type: Number, multiple: false, defaultValue: 4 },
     { name: 'src', alias: 'i', type: String, multiple: false, },
     { name: 'name', alias: 'n', type: String, multiple: false, defaultValue: ""},
     { name: 'startNum', type: Number, multiple: false, defaultOption: true, defaultValue: "1"},
@@ -66,14 +66,14 @@ const main = () => {
       `);
     }
 
-    if (!options["dryrun"]) {
+    if (options["wetrun"]) {
       fs.renameSync(oldPath, newPath);
     }
 
   });
 
   if (!options["quiet"]) {
-    const message = !!options["dryrun"] ? "Dry Run: File names have not been changed" : "File names have been changed"; 
+    const message = !options["wetrun"] ? "Dry Run: File names have not been changed" : "File names have been changed"; 
     console.log(message);
   }
 }
